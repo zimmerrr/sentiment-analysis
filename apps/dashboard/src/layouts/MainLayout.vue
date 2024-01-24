@@ -64,18 +64,18 @@ const MENU = [
   {
     title: 'Home',
     icon: 'home',
-    link: '/'
+    link: '/',
   },
   {
     title: 'Data Feeder',
     icon: 'code',
-    link: '/data-feeder'
-  }
+    link: '/data-feeder',
+  },
 ]
 
 const leftDrawerOpen = ref(false)
 
-function toggleLeftDrawer () {
+function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value
 }
 </script>
