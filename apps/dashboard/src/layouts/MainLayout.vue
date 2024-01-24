@@ -1,34 +1,31 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
+    <q-header
+      elevated
+      class="bg-primary"
+    >
       <q-toolbar>
-        <q-btn
-          flat
-          dense
-          round
-          icon="menu"
-          aria-label="Menu"
-          @click="toggleLeftDrawer"
-        />
-
-        <q-toolbar-title>
-          Quasar App
-        </q-toolbar-title>
-
-        <div>Sentiment Analysis v1.0</div>
+        <div class="text-weight-bold">
+          Sentiment Analysis v1.0
+        </div>
       </q-toolbar>
     </q-header>
 
     <q-drawer
-      v-model="leftDrawerOpen"
+      v-model="drawer"
       show-if-above
       bordered
+      :mini="minimizedDrawer"
+      class="bg-secondary"
+      @mouseover="minimizedDrawer = false"
+      @mouseout="minimizedDrawer = true"
     >
       <q-list>
         <q-item-label
           header
+          class="text-primary text-weight-bold"
         >
-          Essential Links
+          Menu
         </q-item-label>
 
         <div>
@@ -38,6 +35,7 @@
             clickable
             tag="a"
             :href="item.link"
+            class="text-primary text-weigh"
           >
             <q-item-section>
               <q-item-label>{{ item.title }}</q-item-label>
@@ -68,14 +66,19 @@ const MENU = [
   },
   {
     title: 'Data Feeder',
-    icon: 'code',
-    link: '/data-feeder',
+    icon: 'upload',
+    link: '/#/data-feeder',
+  },
+  {
+    title: 'Data Viewer',
+    icon: 'storage',
+    link: '/#/data-viewer',
   },
 ]
 
-const leftDrawerOpen = ref(false)
-
-function toggleLeftDrawer() {
-  leftDrawerOpen.value = !leftDrawerOpen.value
+const drawer = ref(false)
+const minimizedDrawer = ref(true)
+function toggleDrawer() {
+  drawer.value = !drawer.value
 }
 </script>
