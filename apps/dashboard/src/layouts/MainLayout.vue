@@ -1,0 +1,81 @@
+<template>
+  <q-layout view="lHh Lpr lFf">
+    <q-header elevated>
+      <q-toolbar>
+        <q-btn
+          flat
+          dense
+          round
+          icon="menu"
+          aria-label="Menu"
+          @click="toggleLeftDrawer"
+        />
+
+        <q-toolbar-title>
+          Quasar App
+        </q-toolbar-title>
+
+        <div>Quasar v{{ $q.version }}</div>
+      </q-toolbar>
+    </q-header>
+
+    <q-drawer
+      v-model="leftDrawerOpen"
+      show-if-above
+      bordered
+    >
+      <q-list>
+        <q-item-label
+          header
+        >
+          Essential Links
+        </q-item-label>
+
+        <div>
+          <q-item
+            v-for="item in MENU"
+            :key="item.title"
+            clickable
+            tag="a"
+            :href="item.link"
+          >
+            <q-item-section>
+              <q-item-label>{{ item.title }}</q-item-label>
+            </q-item-section>
+
+            <q-item-section side>
+              <q-icon :name="item.icon" />
+            </q-item-section>
+          </q-item>
+        </div>
+      </q-list>
+    </q-drawer>
+
+    <q-page-container>
+      <router-view />
+    </q-page-container>
+  </q-layout>
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+
+const MENU = [
+  {
+    title: 'Home',
+    icon: 'home',
+    link: '/'
+  },
+  {
+    title: 'Data Feeder',
+    icon: 'code',
+    link: '/data-feeder'
+  }
+]
+
+const leftDrawerOpen = ref(false)
+
+function toggleLeftDrawer () {
+  leftDrawerOpen.value = !leftDrawerOpen.value
+}
+</script>
