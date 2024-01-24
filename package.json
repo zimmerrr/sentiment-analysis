@@ -1,0 +1,8 @@
+{
+  "private": true,
+  "scripts": {
+    "dev:frontend": "pnpm --filter frontend dev",
+    "dev:dashboard": "pnpm --filter dashboard dev",
+    "lint:dashboard": "pnpm --filter dashboard lint --fix"
+  }
+}
