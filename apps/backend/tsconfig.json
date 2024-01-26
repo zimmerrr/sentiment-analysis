@@ -1,0 +1,7 @@
+{
+    "compilerOptions": {
+      "target": "es2017", // or a higher version like es2020, es2022
+      "module": "esnext", // or any of the other allowed values like es2022, node16
+      // ... other options
+    }
+  }
