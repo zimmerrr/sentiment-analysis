@@ -38,7 +38,7 @@
 </template>
 
 <script setup lang="ts">
-import { Notify } from 'quasar'
+import { Notify, LocalStorage } from 'quasar'
 import { ref } from 'vue'
 
 const inputData = ref('')
@@ -46,10 +46,7 @@ const categoryOptions = ref(['positive', 'neutral', 'negative'])
 const dataCategory = ref('')
 const loading = ref(false)
 
-const outputData = ref({
-  input: '',
-  category: '',
-})
+const outputData = ref([])
 async function submit(category: string) {
   try {
     loading.value = true
@@ -63,11 +60,30 @@ async function submit(category: string) {
         icon: 'check',
       })
       loading.value = false
-      outputData.value = {
+      outputData.value.push({
         input: inputData.value,
         category,
+        dateCreated: new Date().toISOString(),
+      })
+
+      const localStorageData = LocalStorage.getItem('data') || []
+      console.log(localStorageData)
+      const newData = { input: inputData.value, category, dateCreated: new Date().toISOString() }
+
+      const isDuplicate = localStorageData.some(element =>
+        element.input === newData.input && element.category === newData.category)
+
+      if (!isDuplicate) {
+        // If not a duplicate, add new data to local storage
+        localStorageData.push(newData)
+        LocalStorage.set('data', localStorageData)
+      } else {
+        // Handle the case where the data is a duplicate
+        console.log('Duplicate data. Not adding to local storage.')
       }
-      console.log(outputData.value)
+
+      resetForm()
+
       resetForm()
     }, 500)
   }
@@ -76,11 +92,6 @@ async function submit(category: string) {
 function resetForm() {
   inputData.value = ''
   dataCategory.value = ''
-
-  outputData.value = {
-    input: '',
-    category: '',
-  }
 }
 </script>
 

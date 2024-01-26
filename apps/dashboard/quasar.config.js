@@ -9,6 +9,7 @@
 // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js
 
 const { configure } = require('quasar/wrappers')
+require('dotenv').config()
 
 module.exports = configure(function(/* ctx */) {
   return {
@@ -106,6 +107,7 @@ module.exports = configure(function(/* ctx */) {
         'Notify',
         'Loading',
         'Dialog',
+        'LocalStorage',
       ],
     },
 
