@@ -15,6 +15,12 @@
           :disable="loading"
           class="q-mb-md"
         />
+        <div class="text-h6 text-center q-mb-md">
+          <span :class="outputData.label === 'POSITIVE'? 'text-green' : 'text-red'">
+            {{ outputData.label }}
+          </span>
+          {{ outputData.score }}
+        </div>
       </div>
 
       <div class="row  q-col-gutter-md justify-center">
@@ -36,63 +42,44 @@
 </template>
 
 <script setup lang="ts">
-import { Notify } from 'quasar'
 import { ref } from 'vue'
-import axios from 'axios'
+import { neon } from '@neondatabase/serverless'
+import { drizzle } from 'drizzle-orm/neon-http'
 
 const inputData = ref('')
 const dataCategory = ref('')
 const loading = ref(false)
 
 const outputData = ref({
-  input: '',
-  category: '',
+  label: '',
+  score: '',
 })
 
 async function submit() {
-  loading.value = true
   try {
-    const openAI = axios.create({
-      baseURL: 'https://api.openai.com/v1',
+    loading.value = true
+    const resp = await fetch('http://localhost:3000', {
+      method: 'POST',
       headers: {
-        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
         'Content-Type': 'application/json',
       },
-    })
-
-    const sentimentPrompt = `Analyze the sentiment of the following text: ${inputData.value}`
-    const result = await openAI.post('/engines/davinci/completions', {
-      prompt: sentimentPrompt,
-      max_tokens: 60,
-    })
-
-    console.log('OpenAI Response:', result.data.choices[0].text)
-
-    dataCategory.value = interpretResponse(result.data.choices[0].text)
-    outputData.value = {
-      input: inputData.value,
-      category: dataCategory.value,
-    }
-
-    Notify.create(`Sentiment analysis result: ${dataCategory.value}`)
-  } catch (error) {
-    console.error('Error:', error)
-    Notify.create({
-      type: 'negative',
-      message: 'An error occurred while analyzing sentiment.',
+      body: JSON.stringify({
+        text: inputData.value,
+      }),
+    }).then((res) => {
+      return res.json()
+    }).then((data) => {
+      const _data = data[0]
+      outputData.value.label = _data.label
+      outputData.value.score = _data.score
     })
   } finally {
     loading.value = false
   }
 }
 
-function interpretResponse(responseText: string): string {
-  // Implement logic to categorize the response as 'positive', 'negative', or 'neutral'
-  // This will depend on how the OpenAI model formats its sentiment analysis responses
-  if (responseText.includes('positive')) return 'positive'
-  if (responseText.includes('negative')) return 'negative'
-  return 'neutral' // Default to neutral if not clearly positive or negative
-}
+// const body = await resp.json()
+
 </script>
 
 <style lang="sass">
